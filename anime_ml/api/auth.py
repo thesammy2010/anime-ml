@@ -8,7 +8,7 @@ from typing import Any, Dict
 
 import requests
 
-from anime_ml.settings import CLIENT_ID, CLIENT_SECRET
+from anime_ml.settings import AUTH_URL, BASE_URL, CLIENT_ID, CLIENT_SECRET
 
 
 # 1. Generate a new Code Verifier / Code Challenge.
@@ -20,18 +20,15 @@ def get_new_code_verifier() -> str:
 # 2. Print the URL needed to authorise your application.
 def print_new_authorisation_url(code_challenge: str):
 
-    url = (
-        f"https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id="
-        f"{CLIENT_ID}&code_challenge={code_challenge}"
-    )
-    logging.info(f"Authorise your application by clicking here: {url}\n")
+    url: str = f"{AUTH_URL}?response_type=code&client_id={CLIENT_ID}&code_challenge={code_challenge}"
+
+    print(f"Authorise your application by clicking here: {url}\n")
 
 
 # 3. Once you've authorised your application, you will be redirected to the webpage you've
 #    specified in the API panel. The URL will contain a parameter named "code" (the Authorisation
 #    Code). You need to feed that code to the application.
 def generate_new_token(auth_code: str, verif_code: str) -> dict:
-    # global CLIENT_ID, CLIENT_SECRET
 
     url = "https://myanimelist.net/v1/oauth2/token"
     data = {
@@ -58,7 +55,7 @@ def generate_new_token(auth_code: str, verif_code: str) -> dict:
 
 # 4. Test the API by requesting your profile information
 def print_user_info(access_token: str):
-    url = "https://api.myanimelist.net/v2/users/@me"
+    url = f"{BASE_URL}/users/@me"
     response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"})
 
     response.raise_for_status()
