@@ -6,9 +6,12 @@ import requests
 
 from anime_ml.settings import BASE_URL
 
-with open(file="token.json") as f:
-    access_token_data: Dict[str, Any] = json.load(f)
-    HEADERS: Dict[str, str] = {"Authorization": f"Bearer {access_token_data.get('access_token')}"}
+try:
+    with open(file="token.json") as f:
+        access_token_data: Dict[str, Any] = json.load(f)
+        HEADERS: Dict[str, str] = {"Authorization": f"Bearer {access_token_data.get('access_token')}"}
+except FileNotFoundError:
+    logging.warning("no tokens found")
 
 
 def get_profile() -> Dict[Any, Any]:
@@ -21,7 +24,7 @@ def get_profile() -> Dict[Any, Any]:
 
 def get_anime_list() -> List[Dict[str, Any]]:
 
-    url: str = f"{BASE_URL}/users/@me/animelist"
+    url: str = f"{BASE_URL}/users/@me/animelist?fields=id"
     results: List[Dict[str, Any]] = []
 
     # lazy pagination
@@ -32,15 +35,32 @@ def get_anime_list() -> List[Dict[str, Any]]:
         url = r.json().get("paging", {}).get("next")
         if not url:
             break
-        logging.info("New URL: " + url)
 
-    return results
+    anime_list: List[Dict[str, Any]] = []
+    for r in results:
+        for rr in r.get("data", []):
+            anime_list.append(rr)
+
+    return anime_list
 
 
-def get_anime(anime_id: str) -> Dict[str, Any]:
+def get_anime(anime_id: int) -> Dict[str, Any]:
 
-    url: str = f"{BASE_URL}/anime/{anime_id}"
+    url: str = (
+        f"{BASE_URL}/anime/{anime_id}?fields=id,title,alternative_titles,start_date,end_date,synopsis,"
+        "mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,"
+        "my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background"
+        ",related_anime,recommendations,studios,statistics"
+    )
 
+    r = requests.get(url=url, headers=HEADERS)
+    r.raise_for_status()
+    return r.json()
+
+
+def get_user_stats() -> Dict[str, Any]:
+
+    url: str = f"{BASE_URL}/users/@me?fields=anime_statistics"
     r = requests.get(url=url, headers=HEADERS)
     r.raise_for_status()
     return r.json()

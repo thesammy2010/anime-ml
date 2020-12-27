@@ -1,0 +1,107 @@
+{
+   "data":[
+      {
+         "node":{
+            "id":41380,
+            "title":"100-man no Inochi no Ue ni Ore wa Tatteiru",
+            "main_picture":{
+               "medium":"https://api-cdn.myanimelist.net/images/anime/1825/108800.jpg",
+               "large":"https://api-cdn.myanimelist.net/images/anime/1825/108800l.jpg"
+            }
+         }
+      },
+      {
+         "node":{
+            "id":44881,
+            "title":"100-man no Inochi no Ue ni Ore wa Tatteiru 2nd Season",
+            "main_picture":{
+               "medium":"https://api-cdn.myanimelist.net/images/anime/1027/110788.jpg",
+               "large":"https://api-cdn.myanimelist.net/images/anime/1027/110788l.jpg"
+            }
+         }
+      },
+      {
+         "node":{
+            "id":320,
+            "title":"A Kite",
+            "main_picture":{
+               "medium":"https://api-cdn.myanimelist.net/images/anime/5/85959.jpg",
+               "large":"https://api-cdn.myanimelist.net/images/anime/5/85959l.jpg"
+            }
+         }
+      },
+      {
+         "node":{
+            "id":9611,
+            "title":"Aa! Megami-sama! (2011)",
+            "main_picture":{
+               "medium":"https://api-cdn.myanimelist.net/images/anime/5/28569.jpg",
+               "large":"https://api-cdn.myanimelist.net/images/anime/5/28569l.jpg"
+            }
+         }
+      },
+      {
+         "node":{
+            "id":50,
+            "title":"Aa! Megami-sama! (TV)",
+            "main_picture":{
+               "medium":"https://api-cdn.myanimelist.net/images/anime/2/17841.jpg",
+               "large":"https://api-cdn.myanimelist.net/images/anime/2/17841l.jpg"
+            }
+         }
+      },
+      {
+         "node":{
+            "id":1003,
+            "title":"Aa! Megami-sama! (TV) Specials",
+            "main_picture":{
+               "medium":"https://api-cdn.myanimelist.net/images/anime/2/17893.jpg",
+               "large":"https://api-cdn.myanimelist.net/images/anime/2/17893l.jpg"
+            }
+         }
+      },
+      {
+         "node":{
+            "id":304,
+            "title":"Aa! Megami-sama! Movie",
+            "main_picture":{
+               "medium":"https://api-cdn.myanimelist.net/images/anime/5/71211.jpg",
+               "large":"https://api-cdn.myanimelist.net/images/anime/5/71211l.jpg"
+            }
+         }
+      },
+      {
+         "node":{
+            "id":880,
+            "title":"Aa! Megami-sama!: Sorezore no Tsubasa",
+            "main_picture":{
+               "medium":"https://api-cdn.myanimelist.net/images/anime/4/78931.jpg",
+               "large":"https://api-cdn.myanimelist.net/images/anime/4/78931l.jpg"
+            }
+         }
+      },
+      {
+         "node":{
+            "id":2198,
+            "title":"Aa! Megami-sama!: Sorezore no Tsubasa Specials",
+            "main_picture":{
+               "medium":"https://api-cdn.myanimelist.net/images/anime/2/13530.jpg",
+               "large":"https://api-cdn.myanimelist.net/images/anime/2/13530l.jpg"
+            }
+         }
+      },
+      {
+         "node":{
+            "id":3090,
+            "title":"Aa! Megami-sama!: Tatakau Tsubasa",
+            "main_picture":{
+               "medium":"https://api-cdn.myanimelist.net/images/anime/7/18673.jpg",
+               "large":"https://api-cdn.myanimelist.net/images/anime/7/18673l.jpg"
+            }
+         }
+      }
+   ],
+   "paging":{
+      "next":"https://api.myanimelist.net/v2/users/@me/animelist?offset=10"
+   }
+}
