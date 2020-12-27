@@ -1,4 +1,3 @@
-import datetime
 import json
 from collections import defaultdict
 from typing import Any, DefaultDict, Dict, List
@@ -32,7 +31,7 @@ class Dates(base):
 
         for i, j in self._data.items():
             if i in ["start_date", "end_date", "created_at", "updated_at"]:
-                self.__setattr__(i, None if not j else datetime.datetime.fromisoformat(j))
+                self.__setattr__(i, j)
 
     def __repr__(self) -> str:
         return json.dumps({i: str(j) for i, j in self.__dict__.items() if i != "_data" and j})
@@ -86,6 +85,19 @@ class Studios(base):
         self.names: List[str] = [i.get("name") for i in self._data.get("studios", [])]
 
 
+class Genres(base):
+
+    def __init__(self, data):
+        super().__init__(data=data)
+
+        genre_names: DefaultDict = defaultdict(int)
+        genres: List[str] = [i.get("name") for i in self._data.get("genres", [])]
+        for i in genres:
+            genre_names[i] += 1
+        for i, j in genre_names.items():
+            self.__setattr__(i, j)
+
+
 class Anime(base):
 
     def __init__(self, data):
@@ -95,8 +107,9 @@ class Anime(base):
         self.__setattr__("Title", Title(data=self._data))
         self.__setattr__("Dates", Dates(data=self._data))
         self.__setattr__("Statistics", Statistics(data=self._data))
-        self.__setattr__("Studios", Studios(data=data))
-        self.__setattr__("RelatedAnime", RelatedAnime(data=data))
+        self.__setattr__("Studios", Studios(data=self._data))
+        self.__setattr__("RelatedAnime", RelatedAnime(data=self._data))
+        self.__setattr__("Genres", Genres(data=self._data))
 
         # start season
         self.start_season_year: int = self._data.get("start_season", {}).get("year")

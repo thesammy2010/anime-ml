@@ -9,7 +9,9 @@ repos:
   - id: end-of-file-fixer
   - id: check-yaml
   - id: check-added-large-files
+    exclude: "anime_ml/data"
   - id: check-json
+    exclude: "anime_ml/data"
   - id: check-merge-conflict
   - id: check-toml
   - id: detect-private-key
