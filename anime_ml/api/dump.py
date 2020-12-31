@@ -12,7 +12,7 @@ DATA_FILEPATH: str = "anime_ml/data"
 
 def write_jsonlines(data: Iterable[Dict[str, Any]], filename: str) -> bool:
 
-    with open(file=f"anime_ml/data/{filename}", mode="w") as f:
+    with open(file=f"{DATA_FILEPATH}/{filename}", mode="w") as f:
         for row in data:
             json.dump(obj=row, fp=f)
             f.write("\n")
@@ -23,7 +23,7 @@ def write_jsonlines(data: Iterable[Dict[str, Any]], filename: str) -> bool:
 def read_jsonlines(filename: str) -> List[Dict[str, str]]:
 
     data: List[Dict[str, str]] = []
-    with open(file=f"anime_ml/data/{filename}", mode="r") as f:
+    with open(file=f"{DATA_FILEPATH}/{filename}", mode="r") as f:
         for row in f:
             data.append(json.loads(row))
 

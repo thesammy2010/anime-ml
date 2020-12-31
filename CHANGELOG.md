@@ -4,7 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.5] - 2020-12-30
+
+## Added
+-
+
+## Changed
+- refactored the `model/model.py` file to allow for row-by-row users
+- refactored the `model/objects.py` to remove unnecessary object hierarchy in place for a flat level object
+
+## Removed
+- The `features.py` file as it is no longer needed
+
+
 ## [0.0.4] - 2020-12-26
+## Added
 - added features in `models/features.pu`
 - added genres to `models/objects.py`
 - added methods in `main.py`
