@@ -20,4 +20,4 @@ run:
 
 	@echo "Running" \
 
-	&& python anime_ml/c
+	&& python anime_ml/cli.py

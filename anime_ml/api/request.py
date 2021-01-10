@@ -49,8 +49,8 @@ def get_anime(anime_id: int) -> Dict[str, Any]:
     url: str = (
         f"{BASE_URL}/anime/{anime_id}?fields=id,title,alternative_titles,start_date,end_date,synopsis,"
         "mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,"
-        "list_status{start_date,end_date,priority,num_times_rewatched,rewatch_value,tags,comments},num_episodes,"
-        "start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,"
+        "my_list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments},num_episodes,"
+        "start_season,broadcast,source,average_episode_duration,rating,background,related_anime,"
         "recommendations,studios,statistics"
     )
 

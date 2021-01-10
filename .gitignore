@@ -2,4 +2,5 @@ venv
 .idea/
 token.json
 anime_ml/__pycache__/
+anime_ml/data
 .DS_Store
