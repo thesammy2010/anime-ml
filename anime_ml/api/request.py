@@ -14,7 +14,7 @@ except FileNotFoundError:
     logging.warning("no tokens found")
 
 
-def get_profile() -> Dict[Any, Any]:
+def get_profile() -> Any:
 
     url: str = f"{BASE_URL}/users/@me"
     r = requests.get(url=url, headers=HEADERS)
@@ -25,7 +25,7 @@ def get_profile() -> Dict[Any, Any]:
 def get_anime_list() -> List[Dict[str, Any]]:
 
     url: str = f"{BASE_URL}/users/@me/animelist?fields=id"
-    results: List[Dict[str, Any]] = []
+    results: List[Any] = []
 
     # lazy pagination
     while True:
@@ -38,19 +38,20 @@ def get_anime_list() -> List[Dict[str, Any]]:
 
     anime_list: List[Dict[str, Any]] = []
     for r in results:
-        for rr in r.get("data", []):
+        for rr in r.get("data", []):  # type: ignore[attr-defined]
             anime_list.append(rr)
 
     return anime_list
 
 
-def get_anime(anime_id: int) -> Dict[str, Any]:
+def get_anime(anime_id: int) -> Any:
 
     url: str = (
         f"{BASE_URL}/anime/{anime_id}?fields=id,title,alternative_titles,start_date,end_date,synopsis,"
         "mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,"
-        "my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background"
-        ",related_anime,recommendations,studios,statistics"
+        "my_list_status{start_date,finish_date,priority,num_times_rewatched,rewatch_value,tags,comments},num_episodes,"
+        "start_season,broadcast,source,average_episode_duration,rating,background,related_anime,"
+        "recommendations,studios,statistics"
     )
 
     r = requests.get(url=url, headers=HEADERS)
@@ -58,7 +59,7 @@ def get_anime(anime_id: int) -> Dict[str, Any]:
     return r.json()
 
 
-def get_user_stats() -> Dict[str, Any]:
+def get_user_stats() -> Any:
 
     url: str = f"{BASE_URL}/users/@me?fields=anime_statistics"
     r = requests.get(url=url, headers=HEADERS)

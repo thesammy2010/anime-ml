@@ -4,9 +4,10 @@ from typing import Any, Dict, Iterable, List
 
 date: str = datetime.date.today().isoformat()
 
-ANIME_LIST_FILE: str = f"{date}-anime-list.json"
-ANIME_DETAILS_FILE: str = f"{date}-anime-details.json"
+ANIME_LIST_FILENAME: str = f"{date}-anime-list.json"
+ANIME_DETAILS_FILENAME: str = f"{date}-anime-details.json"
 FEATURES_FILENAME: str = f"{date}-features.json"
+STATISTICS_FILENAME: str = f"{date}-statistics.json"
 DATA_FILEPATH: str = "anime_ml/data"
 
 

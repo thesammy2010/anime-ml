@@ -12,7 +12,7 @@ setup:
 	&& python -m venv venv \
 	&& source venv/bin/activate \
 	&& pip install ./ \
-	&& pip install black==20.8b1 pre-commit==2.8.2 isort==5.6.4
+	&& pip install black==20.8b1 pre-commit==2.8.2 isort==5.6.4 mypy==0.790
 	&& pre-commit install
 
 
@@ -20,4 +20,4 @@ run:
 
 	@echo "Running" \
 
-	&& python anime_ml/c
+	&& python anime_ml/cli.py
