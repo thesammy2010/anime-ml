@@ -45,7 +45,9 @@ class Anime(object):
 
         # List status data
         self.user_watching_status: str = data.get("my_list_status", {}).get("status")
-        self.user_score: int = data.get("my_list_status", {}).get("score")
+        self.user_score: int = (
+            None if not data.get("my_list_status", {}).get("score") else data.get("my_list_status", {}).get("score")
+        )
         self.user_number_of_episodes_watched: int = data.get("my_list_status", {}).get("num_episodes_watched")
         self.user_rewatching: bool = data.get("my_list_status", {}).get("is_rewatching")
         self.user_start_date: str = data.get("my_list_status", {}).get("start_date")
@@ -102,13 +104,18 @@ class Anime(object):
             return (self.user_finish_date_date - self.user_start_date_date).days
 
     def _calculate_series_progress(self) -> Union[None, float]:
-        if not self.total_episodes:
+        if not self.total_episodes or not self.user_number_of_episodes_watched:
             return None
         else:
             return self.user_number_of_episodes_watched / self.total_episodes
 
     def _calculate_three_episode_rule(self) -> bool:
-        return True if self.user_number_of_episodes_watched >= 3 else False
+        if not self.user_number_of_episodes_watched:
+            return False
+        if self.user_number_of_episodes_watched >= 3:
+            return True
+        else:
+            return False
 
     def _calculate_completed(self) -> bool:
 
@@ -123,8 +130,32 @@ class Anime(object):
         else:
             return False
 
+    def _flatten(self, field) -> Dict[str, bool]:
+
+        fields_map: DefaultDict[str, bool] = defaultdict(bool)
+        for f in self.__getattribute__(field):
+            fields_map[f"{field}_{f}"] = True
+
+        return fields_map
+
     def features_dict(self) -> Dict[str, Any]:
-        return {i: j for i, j in self.__dict__.items() if i not in ["synopsis", "data"]}
+
+        clean_columns: List[str] = [
+            "anime_id", "watching", "completed", "on_hold", "dropped", "plan_to_watch", "num_list_users",
+            "community_mean_score", "community_popularity_ranking", "community_number_of_scoring_users",
+            "user_watching_status", "user_score", "user_rewatching", "priority", "number_of_times_rewatched",
+            "rewatch_value", "start_season_year", "start_season_season", "broadcast_day_of_the_week",
+            "broadcast_start_time", "total_episodes", "nsfw_tag_type", "media_type", "airing_status", "anime_source",
+            "average_episode_duration_in_seconds", "anime_age_rating", "is_part_of_list", "series_progress",
+            "three_episode_rule", "days_watched", "user_completed"
+        ]
+        initial_features: Dict[str, Union[str, int, float]] = {
+            i: j for (i, j) in self.__dict__.items() if i in clean_columns and i != "data"
+        }
+        initial_features.update(self._flatten(field="studio_names"))
+        initial_features.update(self._flatten(field="genre_names"))
+
+        return initial_features
 
     def __repr__(self) -> str:
-        return str(self.features_dict())
+        return "\n" + "\n".join([f"{i}: {j}" for (i, j) in self.features_dict().items()])

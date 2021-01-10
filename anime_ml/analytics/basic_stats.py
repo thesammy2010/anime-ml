@@ -4,6 +4,7 @@ import logging
 from collections import defaultdict, namedtuple
 from typing import Any, DefaultDict, Dict, List, NamedTuple, Union
 
+from anime_ml.api.request import get_anime
 from anime_ml.model.objects import Anime  # type: ignore[attr-defined]
 
 
@@ -14,19 +15,20 @@ class Statistics(object):
         if not animelist:
             logging.warning("Animelist is empty! Cannot provide any statistics")
             return
-
+        self.number_of_anime: int = len(self.animelist)
         # self.__setattr__("Your List Ranked by the Community Score", self._highest_ranked_anime_by_mal())
-        self.__setattr__("user_watching_status", self.get_field_aggregates(field="user_watching_status"))
-        self.__setattr__("genre_names", self.get_field_aggregates(field="genre_names", _type="list"))
-        self.__setattr__("studio_names", self.get_field_aggregates(field="studio_names", _type="list"))
-        self.__setattr__("media_type", self.get_field_aggregates(field="media_type"))
-        self.__setattr__("anime_source", self.get_field_aggregates(field="anime_source"))
-        self.__setattr__("anime_age_rating", self.get_field_aggregates(field="anime_age_rating"))
-        self.__setattr__("priority", self.get_field_aggregates(field="priority"))
-        self.__setattr__("number_of_times_rewatched", self.get_field_aggregates(field="number_of_times_rewatched"))
-        self.__setattr__("rewatch_value", self.get_field_aggregates(field="rewatch_value"))
-        self.__setattr__("recommendations", self._recommendations())
-        self.__setattr__("Anime watched per day", self._number_of_anime_per_day())
+        self.user_watching_status: Dict[str, int] = self.get_field_aggregates(field="user_watching_status")
+        self.genre_names: Dict[str, int] = self.get_field_aggregates(field="genre_names", _type="list")
+        self.studio_names: Dict[str, int] = self.get_field_aggregates(field="studio_names", _type="list")
+        self.media_type: Dict[str, int] = self.get_field_aggregates(field="media_type")
+        self.anime_source: Dict[str, int] = self.get_field_aggregates(field="anime_source")
+        self.anime_age_rating: Dict[str, int] = self.get_field_aggregates(field="anime_age_rating")
+        self.priority: Dict[str, int] = self.get_field_aggregates(field="priority")
+        self.number_of_times_rewatched: Dict[str, int] = self.get_field_aggregates(field="number_of_times_rewatched")
+        self.rewatch_value: Dict[str, int] = self.get_field_aggregates(field="rewatch_value")
+        self.recommendations: Dict[str, int] = self._recommendations()
+        self.user_score: Dict[str, int] = self.get_field_aggregates(field="user_score")
+        self.anime_watched_per_day: Dict[str, int] = self._number_of_anime_per_day()
 
     def __repr__(self) -> str:
         return json.dumps(self.data(), indent=4)
@@ -92,3 +94,27 @@ class Statistics(object):
                 rec[r["anime_id"]] += r["number_of_recommendations"]
 
         return dict(rec)
+
+
+def report(stats: Statistics) -> List[str]:
+    logging.info("Here's a generated report based on the aggregate data in your anime list")
+
+    fav_genre: str = sorted(stats.genre_names, key=stats.genre_names.get, reverse=True)[0]  # type: ignore[arg-type]
+    top_studio: str = sorted(stats.studio_names, key=stats.studio_names.get, reverse=True)[0]   # type: ignore[arg-type]
+    media_type: str = sorted(stats.media_type, key=stats.media_type.get, reverse=True)[0]  # type: ignore[arg-type]
+    anime_source: str = sorted(stats.anime_source, key=stats.anime_source.get, reverse=True)[0]  # type: ignore[arg-type] # fmt:off
+    anime_age_rating: str = sorted(stats.anime_age_rating, key=stats.anime_age_rating.get, reverse=True)[0]  # type: ignore[arg-type] # fmt: off
+    top_recommended_id: str = sorted(stats.recommendations, key=stats.recommendations.get, reverse=True)[0]  # type: ignore[arg-type] # fmt: off
+    top_recommended: Anime = Anime(data=get_anime(anime_id=int(top_recommended_id)))  # type: ignore[arg-type]
+
+    data: List[str] = [
+        f"Your most common genre is {fav_genre}!",
+        f"Your most common studio is {top_studio}!",
+        f"Your most common media type is {media_type}",
+        f"Your most common anime source is {anime_source}",
+        f"Your most common age rating to watch is {anime_age_rating}",
+        f"Based on community recommendations, you're recommended to watch {top_recommended.title} "
+        f"(id={top_recommended.anime_id})",
+    ]
+
+    return data

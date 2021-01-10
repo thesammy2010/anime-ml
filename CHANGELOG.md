@@ -8,10 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 - linting tools: [`mypy`]
+- spark in `anime_ml/model/ml.py`
 
 #### Changed
 - code that didn't pass linting
 - changed `setup.py` to explicitly list dependencies
+- fixes to `anime_ml/model/objects` to handle null data
 
 
 ## [0.1.0] - 2021-01-10

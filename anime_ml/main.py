@@ -3,9 +3,11 @@ import logging
 import os
 from typing import Any, Dict, List
 
-from anime_ml.analytics.basic_stats import Statistics
+from anime_ml import __version__
+from anime_ml.analytics.basic_stats import Statistics, report
 from anime_ml.api.auth import authenticate
 from anime_ml.api.request import get_anime, get_anime_list, get_profile
+from anime_ml.model.ml import ml  # type: ignore[attr-defined]
 from anime_ml.model.objects import Anime  # type: ignore[attr-defined]
 
 from anime_ml.api.dump import (  # isort: skip
@@ -26,7 +28,7 @@ def download_anime_list() -> bool:
     authenticate()
 
     profile: Dict[str, Any] = get_profile().get("name")
-    logging.info(f"Profile details: {profile}")
+    logging.info(f"Authenticated user: {profile}")
 
     if ANIME_LIST_FILENAME not in os.listdir(DATA_FILEPATH):
         logging.warning(f"{ANIME_LIST_FILENAME} not in {DATA_FILEPATH}. Querying from MyAnimeList")
@@ -57,16 +59,19 @@ def transform_data() -> List[Anime]:
     data: List[Anime] = []
     for row in read_jsonlines(filename=ANIME_DETAILS_FILENAME):
         # logging.debug(f"Anime id: {row.get('id')} transformed")
-        data.append(Anime(data=row))
+        data.append(Anime(data=row, is_part_of_list=True))
 
     logging.info(f"{len(data)} anime downloaded from anime list")
 
     return data
 
 
-def overall_report():
-    # based on data from Statistics
-    pass
+def write_features_to_disk(data: List[Anime]) -> bool:
+    logging.info(f"writing features data to {FEATURES_FILENAME}")
+    write_jsonlines(
+        data=(a.features_dict() for a in data), filename=FEATURES_FILENAME
+    )
+    return True
 
 
 def ml_recommend():
@@ -76,6 +81,11 @@ def ml_recommend():
 
 
 def main():
+    logging.info("")
+    logging.info("---------------------------------------")
+    logging.info(f"--- Running anime-ml [ver: {__version__}] ---")
+    logging.info("---------------------------------------")
+    logging.info("")
 
     download_anime_list()
     download_anime_details()
@@ -85,6 +95,18 @@ def main():
     data_2: Statistics = Statistics(data_1)
     with open(file=f"{DATA_FILEPATH}/{STATISTICS_FILENAME}", mode="w") as f:
         json.dump(obj=data_2.data(), fp=f, indent=4)
+    data_3: List[str] = report(stats=data_2)
+
+    logging.info("")
+    logging.info("---------------------------------------")
+    for i in data_3:
+        logging.info(i)
+    logging.info("---------------------------------------")
+    logging.info("")
+
+    logging.info("Calculating features")
+    write_features_to_disk(data=data_1)
+    ml()
 
 
 if __name__ == '__main__':

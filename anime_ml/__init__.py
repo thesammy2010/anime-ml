@@ -1,8 +1,11 @@
-from .analytics.basic_stats import Statistics
+__version__ = "0.2.0"
+
+from .analytics.basic_stats import Statistics, report
 from .api.auth import authenticate
 from .api.request import get_anime, get_anime_list, get_profile
 from .cli import *  # file is empty
 from .main import download_anime_details, download_anime_list, main
+from .model.ml import ml  # type: ignore[attr-defined]
 from .model.objects import Anime  # type: ignore[attr-defined]
 
 from .api.dump import (  # isort: skip
@@ -15,5 +18,3 @@ from .api.dump import (  # isort: skip
 )
 
 from .settings import (BASE_URL, AUTH_URL, CLIENT_ID, CLIENT_SECRET)  # isort: skip
-
-__version__ = "0.1.0"
