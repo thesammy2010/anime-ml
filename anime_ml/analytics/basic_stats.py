@@ -4,7 +4,7 @@ import logging
 from collections import defaultdict, namedtuple
 from typing import Any, DefaultDict, Dict, List, NamedTuple, Union
 
-from anime_ml.model.objects import Anime
+from anime_ml.model.objects import Anime  # type: ignore[attr-defined]
 
 
 class Statistics(object):
@@ -41,7 +41,7 @@ class Statistics(object):
         return {i: getattr(anime, i) for i in fields}
 
     def _highest_ranked_anime_by_mal(self) -> List[Dict[str, Any]]:
-        ranked_list: List[Anime] = sorted(self.animelist, key=lambda a: a.community_mean_score, reverse=True)
+        ranked_list: List[Anime] = sorted(self.animelist, key=lambda a: a.community_mean_score, reverse=True)  # type: ignore[no-any-return]  # fmt: off
         return [
             self._limit_fields(anime=a, additional_fields=["community_mean_score", "user_score"]) for a in ranked_list
         ]
@@ -62,14 +62,14 @@ class Statistics(object):
     def _number_of_anime_per_day(self) -> Dict[str, int]:
 
         # min starting_date
-        AiringDate: NamedTuple = namedtuple(typename="AiringDate", field_names=["start_date", "finish_date"])
+        AiringDate: NamedTuple = namedtuple(typename="AiringDate", field_names=["start_date", "finish_date"])  # type: ignore[misc]  # fmt: off
 
         dates: List[AiringDate] = [
-            AiringDate(start_date=a.user_start_date_date, finish_date=a.user_finish_date_date) for a in self.animelist
-            if a.user_start_date_date is not None and a.user_finish_date_date is not None
+            AiringDate(start_date=a.user_start_date_date, finish_date=a.user_finish_date_date)  # type: ignore[call-arg]
+            for a in self.animelist if a.user_start_date_date is not None and a.user_finish_date_date is not None
         ]
-        sorted_dates: List[AiringDate] = sorted(dates, key=lambda q: q.start_date)
-        min_start_date: datetime.date = sorted_dates[0].start_date
+        sorted_dates: List[AiringDate] = sorted(dates, key=lambda q: q.start_date)  # type: ignore[no-any-return, attr-defined]  # fmt: off
+        min_start_date: datetime.date = sorted_dates[0].start_date  # type: ignore[attr-defined]
         end_date: datetime.date = datetime.date.today()
         date_diff: int = (end_date - min_start_date).days
 
@@ -78,7 +78,7 @@ class Statistics(object):
         for day in range(date_diff + 1):
             date: datetime.date = min_start_date + datetime.timedelta(days=day)  # 2020-10-01
             for d in sorted_dates:
-                if d.start_date <= date <= d.finish_date:
+                if d.start_date <= date <= d.finish_date:  # type: ignore[attr-defined]
                     results[date.isoformat()] += 1
 
         return dict(results)

@@ -13,7 +13,7 @@ from anime_ml.settings import AUTH_URL, BASE_URL, CLIENT_ID, CLIENT_SECRET
 
 # 1. Generate a new Code Verifier / Code Challenge.
 def get_new_code_verifier() -> str:
-    token = secrets.token_urlsafe(100)
+    token: str = secrets.token_urlsafe(100)
     return token[:128]
 
 
@@ -28,10 +28,10 @@ def print_new_authorisation_url(code_challenge: str):
 # 3. Once you've authorised your application, you will be redirected to the webpage you've
 #    specified in the API panel. The URL will contain a parameter named "code" (the Authorisation
 #    Code). You need to feed that code to the application.
-def generate_new_token(auth_code: str, verif_code: str) -> dict:
+def generate_new_token(auth_code: str, verif_code: str) -> Any:
 
-    url = "https://myanimelist.net/v1/oauth2/token"
-    data = {
+    url: str = "https://myanimelist.net/v1/oauth2/token"
+    data: Dict[str, Any] = {
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET,
         "code": auth_code,
@@ -39,10 +39,10 @@ def generate_new_token(auth_code: str, verif_code: str) -> dict:
         "grant_type": "authorization_code",
     }
 
-    response = requests.post(url, data)
+    response: requests.models.Response = requests.post(url, data)
     response.raise_for_status()  # Check whether the requests contains errors
 
-    token = response.json()
+    token: Any = response.json()
     response.close()
     print("Token generated successfully!")
 
@@ -54,12 +54,12 @@ def generate_new_token(auth_code: str, verif_code: str) -> dict:
 
 
 # 4. Test the API by requesting your profile information
-def print_user_info(access_token: str):
-    url = f"{BASE_URL}/users/@me"
-    response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"})
+def print_user_info(access_token: str) -> None:
+    url: str = f"{BASE_URL}/users/@me"
+    response: requests.models.Response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"})
 
     response.raise_for_status()
-    user = response.json()
+    user: Any = response.json()
     response.close()
 
     print(f"\n>>> Greetings {user['name']}! <<<")
@@ -89,12 +89,12 @@ def check_token() -> bool:
         return True
 
 
-def authenticate():
+def authenticate() -> None:
     if not check_token():
         code_verifier = code_challenge = get_new_code_verifier()
         print_new_authorisation_url(code_challenge=code_challenge)
 
-        authorisation_code = input("Copy-paste the Authorisation Code: ").strip()
+        authorisation_code: str = input("Copy-paste the Authorisation Code: ").strip()
         generated_token = generate_new_token(authorisation_code, code_verifier)
 
         print_user_info(generated_token["access_token"])
@@ -103,7 +103,7 @@ def authenticate():
         return
 
 
-def refresh_token():
+def refresh_token() -> None:
     pass
 
 

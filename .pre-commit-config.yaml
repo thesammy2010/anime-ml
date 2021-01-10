@@ -34,3 +34,9 @@ repos:
     entry: isort
     types: [python]
     pass_filenames: true
+  - id: mypy
+    name: mypy
+    stages: [commit]
+    language: system
+    entry: mypy . --show-error-codes
+    pass_filenames: false

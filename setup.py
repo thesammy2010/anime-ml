@@ -1,9 +1,10 @@
-from setuptools import find_packages, setup
+from setuptools import setup, find_packages  # type: ignore[import]
 
 setup(
     name="anime-ml",
-    version="0.1.0",
+    version="0.2.0",
     packages=find_packages(),
+    install_requires=["requests"],
     url="https://github.com/thesammy2010/anime-ml",
     license="APACHE LICENSE, VERSION 2.0",
     author="thesammy2010",

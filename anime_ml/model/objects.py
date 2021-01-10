@@ -1,3 +1,5 @@
+# type: ignore[assignment]
+
 import datetime
 from collections import defaultdict
 from typing import Any, DefaultDict, Dict, List, Union
@@ -9,7 +11,7 @@ class Anime(object):
 
         # title data
         self.anime_id: int = data["id"]
-        self.title: str = data.get("title")
+        self.title: str = data["title"]
         self.synonyms: str = data.get("alternative_titles", {}).get("synonyms")
         self.title_english: str = data.get("alternative_titles", {}).get("en")
         self.title_japanese: str = data.get("alternative_titles", {}).get("ja")
@@ -94,15 +96,14 @@ class Anime(object):
         self.user_completed: bool = self._calculate_completed()
 
     def _calculate_days_watched(self) -> Union[None, int]:
-
         if not self.user_start_date_date or not self.user_finish_date_date:
-            return
+            return None
         else:
             return (self.user_finish_date_date - self.user_start_date_date).days
 
     def _calculate_series_progress(self) -> Union[None, float]:
         if not self.total_episodes:
-            return
+            return None
         else:
             return self.user_number_of_episodes_watched / self.total_episodes
 

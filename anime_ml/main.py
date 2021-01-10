@@ -6,12 +6,7 @@ from typing import Any, Dict, List
 from anime_ml.analytics.basic_stats import Statistics
 from anime_ml.api.auth import authenticate
 from anime_ml.api.request import get_anime, get_anime_list, get_profile
-# from anime_ml.model.model import model_features
-from anime_ml.model.objects import Anime
-
-# import numpy
-# from sklearn.linear_model import LinearRegression
-
+from anime_ml.model.objects import Anime  # type: ignore[attr-defined]
 
 from anime_ml.api.dump import (  # isort: skip
     ANIME_DETAILS_FILENAME,
@@ -90,10 +85,6 @@ def main():
     data_2: Statistics = Statistics(data_1)
     with open(file=f"{DATA_FILEPATH}/{STATISTICS_FILENAME}", mode="w") as f:
         json.dump(obj=data_2.data(), fp=f, indent=4)
-
-    # data_3: LinearRegression = model_features(input_data=data_1)
-    # logging.info("Linear modelling complete")
-    # logging.info(data_3.coef_)
 
 
 if __name__ == '__main__':
